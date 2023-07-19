@@ -27,7 +27,7 @@ while(1) :
 
         selenium_metamask_automation.metamaskSetup(words, "QWERasdf!@#$")
 
-        selenium_metamask_automation.changeMetamaskNetwork(networkName)
+        # selenium_metamask_automation.changeMetamaskNetwork(networkName)
 
         driver.switch_to.window(driver.window_handles[0])
         driver.switch_to.window(driver.window_handles[1])

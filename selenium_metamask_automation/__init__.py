@@ -30,7 +30,7 @@ def launchSeleniumWebdriver():
     global driver
     # driver = webdriver.Chrome(options=chrome_options, executable_path=driver)
     driver = webdriver.Chrome(options=chrome_options, service=chrome_service)
-    time.sleep(15)
+    time.sleep(10)
     print("Extension has been loaded")
     return driver
 
@@ -84,20 +84,20 @@ def metamaskSetup(recoveryPhrase, password):
     driver.execute_script('arguments[0].click()', element) 
     # driver.find_element(By.XPATH, '//button[text()="Import"]').click()
 
-    time.sleep(2)
+    time.sleep(1)
 
     element = driver.find_element(By.XPATH, '//button[text()="All Done"]')
     driver.execute_script('arguments[0].click()', element) 
     # driver.find_element(By.XPATH, '//button[text()="All Done"]').click()
-    time.sleep(2)
+    time.sleep(1)
 
     # closing the message popup after all done metamask screen
     element = driver.find_element(By.XPATH, '//*[@id="popover-content"]/div/div/section/header/div/button')
     driver.execute_script('arguments[0].click()', element) 
     # driver.find_element(By.XPATH, '//*[@id="popover-content"]/div/div/section/header/div/button').click()
-    time.sleep(2)
+    # time.sleep(2)
     print("Wallet has been imported successfully")
-    time.sleep(5)
+    # time.sleep(5)
 
 
 def changeMetamaskNetwork(networkName):
@@ -115,13 +115,13 @@ def changeMetamaskNetwork(networkName):
     element = driver.find_element(By.XPATH, '//*[@id="app-content"]/div/div[1]/div/div[2]/div[1]/div/span')
     driver.execute_script('arguments[0].click()', element) 
     # driver.find_element(By.XPATH, '//*[@id="app-content"]/div/div[1]/div/div[2]/div[1]/div/span').click()
-    time.sleep(2)
+    # time.sleep(2)
     print("opening network dropdown")
 
     elem = driver.find_element(By.XPATH, '//*[@id="app-content"]/div/div[3]/div')
     driver.execute_script('arguments[0].click()', elem) 
     # elem = driver.find_element(By.XPATH, '//*[@id="app-content"]/div/div[3]/div')
-    time.sleep(2)
+    # time.sleep(2)
 
     change_network = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()='" + networkName + "']"))
@@ -129,9 +129,9 @@ def changeMetamaskNetwork(networkName):
     driver.execute_script('arguments[0].click()', change_network)
     # change_network.click()
     print(networkName, "is selected")
-    time.sleep(2)
+    # time.sleep(2)
     driver.switch_to.window(driver.window_handles[1])
-    time.sleep(2)
+    # time.sleep(2)
     
     # all_li = elem.find_elements(By.TAG_NAME, 'li')
     # # all_li = elem.find_elements_by_tag_name("li")
@@ -145,7 +145,7 @@ def changeMetamaskNetwork(networkName):
     #         driver.switch_to.window(driver.window_handles[0])
     #         time.sleep(3)
     #         return
-    time.sleep(2)
+    # time.sleep(2)
     print("Please provide a valid network name")
 
     driver.switch_to.window(driver.window_handles[1])
@@ -153,9 +153,17 @@ def changeMetamaskNetwork(networkName):
 
 def favouriteAction(network_url, pool_address):
     driver.get("https://www.dextools.io/app/en/" + network_url + "/pair-explorer/" + pool_address)
-    time.sleep(20)
+    time.sleep(10)
     star_button = driver.find_element(By.CSS_SELECTOR, "button[placement='auto'][class='ng-star-inserted']")
     star_button.click()
+
+    copy_button = driver.find_elements(By.CSS_SELECTOR, "a.text-muted")
+    copy_button[0].click()
+    copy_button[1].click()
+    # copy_button.send_keys(Keys.TAB)
+    # element = driver.switch_to.active_element
+    
+    time.sleep(1)
 
     share_button = driver.find_element(By.CSS_SELECTOR, "a.shared-button")
     share_button.click()
