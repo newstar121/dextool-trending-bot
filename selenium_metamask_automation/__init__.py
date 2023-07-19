@@ -170,6 +170,9 @@ def favouriteAction(network_url, pool_address):
     reddit_button = driver.find_element(By.CSS_SELECTOR, "a.btn-reddit")
     reddit_button.click()
     time.sleep(1)
+    driver.refresh()
+    time.sleep(1)
+    driver.refresh()
 
 def connectToWallet():
     try:
