@@ -30,33 +30,64 @@ def launchSeleniumWebdriver():
     global driver
     # driver = webdriver.Chrome(options=chrome_options, executable_path=driver)
     driver = webdriver.Chrome(options=chrome_options, service=chrome_service)
-    time.sleep(15)
+    time.sleep(1)
     print("Extension has been loaded")
     return driver
 
+def find_element_available(element_criteria):
+    flag = 1
+    while(flag):
+        try:
+            element = driver.find_element(By.XPATH, element_criteria)
+            driver.execute_script('arguments[0].click()', element)
+            flag = 0
+        except Exception as e:
+            flag = 1
+            time.sleep(1)
+
+def find_element_css(element_criteria):
+    flag = 1
+    while(flag):
+        try:
+            element = driver.find_element(By.CSS_SELECTOR, element_criteria)
+            element.click()
+            flag = 0
+        except Exception as e:
+            flag = 1
+            time.sleep(1)
+        
+def find_element_keyboard(element_criteria, key):
+    flag = 1
+    element = ''
+    while(flag):
+        try:
+            element = driver.find_element(By.XPATH, element_criteria)
+            element.send_keys(key)
+            flag = 0
+        except Exception as e:
+            flag = 1
+            time.sleep(1)
+    return element
+
+def switch_window(index) :
+    flag = 1
+    while(flag):
+        try:
+            driver.switch_to.window(driver.window_handles[index])
+            flag = 0
+        except:
+            time.sleep(1)
+    time.sleep(0.5)
 
 def metamaskSetup(recoveryPhrase, password):
     
-    driver.switch_to.window(driver.window_handles[1])
+    switch_window(1)
     
-    # element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//button[text()="Get Started"]'))).click
-    element = driver.find_element(By.XPATH, '//button[text()="Get Started"]')
-    driver.execute_script('arguments[0].click()', element) 
+    find_element_available('//button[text()="Get Started"]')
+    find_element_available('//button[text()="Import wallet"]')
+    find_element_available('//button[text()="No Thanks"]')    
 
-    element = driver.find_element(By.XPATH, '//button[text()="Import wallet"]')
-    driver.execute_script('arguments[0].click()', element) 
-
-    element = driver.find_element(By.XPATH, '//button[text()="No Thanks"]')
-    driver.execute_script('arguments[0].click()', element) 
-
-    # driver.find_element(By.XPATH, '//button[text()="Get Started"]').click()
-    # driver.find_element(By.XPATH, '//button[text()="Import wallet"]').click()
-    # driver.find_element(By.XPATH, '//button[text()="No Thanks"]').click()
-
-    time.sleep(3)
-
-    secret_recovery_phrase = driver.find_element(By.XPATH, '//input')
-    secret_recovery_phrase.send_keys(recoveryPhrase)
+    secret_recovery_phrase = find_element_keyboard('//input', recoveryPhrase)
     
     secret_recovery_phrase.send_keys(Keys.TAB)
     checkbox = driver.switch_to.active_element
@@ -72,33 +103,12 @@ def metamaskSetup(recoveryPhrase, password):
 
     terms_of_use = driver.switch_to.active_element
     terms_of_use.send_keys(Keys.SPACE)
-    # inputs = driver.find_element(By.XPATH, "//input")
-    # inputs[0].send_keys(recoveryPhrase)
-    # inputs[1].send_keys(password)
-    # inputs[2].send_keys(password)
-
-    # WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.first-time-flow__terms'))).click
-    # driver.find_element_by_css_selector('.first-time-flow__terms').click()
-
-    element = driver.find_element(By.XPATH, '//button[text()="Import"]')
-    driver.execute_script('arguments[0].click()', element) 
-    # driver.find_element(By.XPATH, '//button[text()="Import"]').click()
-
-    time.sleep(1)
-
-    element = driver.find_element(By.XPATH, '//button[text()="All Done"]')
-    driver.execute_script('arguments[0].click()', element) 
-    # driver.find_element(By.XPATH, '//button[text()="All Done"]').click()
-    time.sleep(1)
-
-    # closing the message popup after all done metamask screen
-    element = driver.find_element(By.XPATH, '//*[@id="popover-content"]/div/div/section/header/div/button')
-    driver.execute_script('arguments[0].click()', element) 
-    # driver.find_element(By.XPATH, '//*[@id="popover-content"]/div/div/section/header/div/button').click()
-    # time.sleep(2)
+    
+    find_element_available('//button[text()="Import"]')
+    find_element_available('//button[text()="All Done"]')
+    find_element_available('//*[@id="popover-content"]/div/div/section/header/div/button')
+    
     print("Wallet has been imported successfully")
-    # time.sleep(5)
-
 
 def changeMetamaskNetwork(networkName):
     # opening network
@@ -152,108 +162,86 @@ def changeMetamaskNetwork(networkName):
     # time.sleep(3)
 
 def favouriteAction(network_url, pool_address):
+    time.sleep(1)
     try:
-        # driver.switch_to.window(driver.window_handles[0])
+        
         driver.get("https://www.dextools.io/app/en/" + network_url + "/pair-explorer/" + pool_address)
-        # driver.switch_to.window(driver.window_handles[0])
-        time.sleep(10)
-        star_button = driver.find_element(By.CSS_SELECTOR, ".favorite-button button")
-        star_button.click()
         time.sleep(1)
-        star_button1 = driver.find_elements(By.CSS_SELECTOR, ".popover-body fa-icon.ng-fa-icon.ng-star-inserted")
-        star_button1[1].click()
-        time.sleep(1)
-        copy_button = driver.find_elements(By.CSS_SELECTOR, "a.text-muted")
-        copy_button[0].click()
-        copy_button[1].click()
-        # copy_button.send_keys(Keys.TAB)
-        # element = driver.switch_to.active_element
+        find_element_css(".favorite-button button")
         
-        time.sleep(1)
+        flag = 1
+        while(flag):
+            try:
+                star_button1 = driver.find_elements(By.CSS_SELECTOR, ".popover-body fa-icon.ng-fa-icon.ng-star-inserted")
+                star_button1[1].click()
+                flag = 0
+            except:
+                flag = 1
+                time.sleep(1)
 
-        share_button = driver.find_element(By.CSS_SELECTOR, "a.shared-button")
-        share_button.click()
-        time.sleep(1)
+        time.sleep(1)  
+        flag = 1
+        while(flag):
+            try:
+                copy_button = driver.find_elements(By.CSS_SELECTOR, "a.text-muted")
+                copy_button[0].click()
+                copy_button[1].click()
+                flag = 0
+            except:
+                flag = 1
+                time.sleep(1)
+
+        time.sleep(1)  
+        find_element_css("a.shared-button") 
+        time.sleep(1)  
+        find_element_css("a.btn-twitter")   
+        time.sleep(1)  
+        find_element_css("a.btn-telegram")   
+        time.sleep(1)  
+        find_element_css("a.btn-reddit")   
         
-        twitter_button = driver.find_element(By.CSS_SELECTOR, "a.btn-twitter")
-        twitter_button.click()
-        time.sleep(1)
-        telegram_button = driver.find_element(By.CSS_SELECTOR, "a.btn-telegram")
-        telegram_button.click()
-        time.sleep(1)
-        reddit_button = driver.find_element(By.CSS_SELECTOR, "a.btn-reddit")
-        reddit_button.click()
-        time.sleep(1)
         driver.refresh()
         time.sleep(1)
         driver.refresh()
+
     except Exception as e:
         print(e)    
 
 def connectToWallet():
-    time.sleep(5)
-    try:
+    time.sleep(1)
+    print('navigating dextools')
+    flag = 1
+    while(flag):
+        try:
 
-        modal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.modal-header")))
-        
-        # find the close button inside the modal header
-        close_button = modal.find_element(By.CSS_SELECTOR, "button[type='button'][class='close'][aria-label='Close']")
-
-        if close_button:
+            modal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.modal-header")))
             
-            print('Close button exists')
+            # find the close button inside the modal header
+            close_button = modal.find_element(By.CSS_SELECTOR, "button[type='button'][class='close'][aria-label='Close']")
+
             close_button.click()
-
-        else:
-            print('Close button does not exist')
-
-        
-    except:
-        print("Failed to find or click the close button")
-
-        #wait for bottom close button to appear and click it
-    try:
-
-        modal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.sub-header")))
-        
-        # find the close button inside the modal header
-        close_button = modal.find_element(By.CSS_SELECTOR, "button[type='button'][class='close'][aria-label='Close']")
-
-        if close_button:
+            flag = 0
             
-            print('Close button exists')
+        except:
+            print("Failed to find or click the close button")
+            time.sleep(1)
+
+    flag = 1
+    while(flag):    
+        try:
+            modal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.sub-header")))
+            # find the close button inside the modal header
+            close_button = modal.find_element(By.CSS_SELECTOR, "button[type='button'][class='close'][aria-label='Close']")
             close_button.click()
+            flag = 0
+        except:
+            print("Failed to find or click the close button")
+            time.sleep(1)
 
-        else:
-            print('Close button does not exist')
-
-    
-        
-    except:
-        print("Failed to find or click the close button")
-
-    try:
-        element = driver.find_element(By.XPATH, '//button[text()="Connect"]')
-        driver.execute_script('arguments[0].click()', element) 
-    except:
-        print("Failed to find or click the connect button")
-    time.sleep(2)
-    try:
-        element = driver.find_element(By.XPATH, '//button[text()=" Connect "]')
-        driver.execute_script('arguments[0].click()', element) 
-    except:
-        print("Failed to find or click the connect button")
-    time.sleep(5)
-
+    find_element_available('//button[text()="Connect"]')
+    find_element_available('//button[text()=" Connect "]')
+    time.sleep(0.5)
     modal = driver.switch_to.active_element
-    
-    
-    # metamask_button = modal.find_element(By.XPATH, "/button")
-    # driver.execute_script('arguments[0].click()', metamask_button) 
-    
-    time.sleep(3)
-
-    # modal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.modal-content")))
     
     modal.send_keys(Keys.TAB)
     element = driver.switch_to.active_element
@@ -267,47 +255,23 @@ def connectToWallet():
 
     element = driver.switch_to.active_element
     element.send_keys(Keys.ENTER)
-    time.sleep(1)
-    driver.switch_to.window(driver.window_handles[1])
-    # element = driver.switch_to.active_element
-    # element.send_keys(Keys.TAB)
-    # element = driver.switch_to.active_element
-    # element.send_keys(Keys.TAB)
-    # element = driver.switch_to.active_element
-    # element.send_keys(Keys.TAB)
-    # element.send_keys(Keys.ENTER)
-    try:
-        element = driver.find_element(By.XPATH, '//button[text()="Next"]')
-        driver.execute_script('arguments[0].click()', element) 
-    except:
-        print("Failed to find or click the connect button")
-    time.sleep(1)
-
-    try:
-        element = driver.find_element(By.XPATH, '//button[text()="Connect"]')
-        driver.execute_script('arguments[0].click()', element) 
-    except:
-        print("Failed to find or click the connect button")
-    time.sleep(2)
     
-    driver.switch_to.window(driver.window_handles[0])
-    try:
-        element = driver.find_element(By.XPATH, '//button[text()=" Verify wallet "]')
-        driver.execute_script('arguments[0].click()', element) 
-    except:
-        print("Failed to find or click the connect button")
-    time.sleep(2)
-
-    driver.switch_to.window(driver.window_handles[1])
-
-    try:
-        element = driver.find_element(By.XPATH, '//button[text()="Sign"]')
-        driver.execute_script('arguments[0].click()', element) 
-    except:
-        print("Failed to find or click the connect button")
-    time.sleep(2)
-    driver.switch_to.window(driver.window_handles[0])
+    switch_window(1)
     
+    find_element_available('//button[text()="Next"]')
+    find_element_available('//button[text()="Connect"]')
+
+    switch_window(0)
+
+    find_element_available('//button[text()=" Verify wallet "]')
+    
+    switch_window(1)
+
+    find_element_available('//button[text()="Sign"]')
+    
+    switch_window(0)
+
+    print('wallet connection finished')
 def connectToWebsite():
     time.sleep(3)
 

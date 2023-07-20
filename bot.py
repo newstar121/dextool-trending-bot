@@ -5,9 +5,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import selenium_metamask_automation
 import configparser
+import asyncio
 from mnemonic import Mnemonic
 
 mnemo = Mnemonic("english")
+
 
 # Read the settings file
 while(1) :
@@ -29,57 +31,19 @@ while(1) :
 
         # selenium_metamask_automation.changeMetamaskNetwork(networkName)
 
-        driver.switch_to.window(driver.window_handles[0])
-        driver.switch_to.window(driver.window_handles[1])
+        selenium_metamask_automation.switch_window(0)
+        selenium_metamask_automation.switch_window(1)
         driver.close()
-        driver.switch_to.window(driver.window_handles[0])
+        selenium_metamask_automation.switch_window(0)
 
         driver.get("https://dextools.io")
 
         selenium_metamask_automation.connectToWallet()
-        # try:
-        #     modal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.modal-header")))
-            
-        #     # find the close button inside the modal header
-        #     close_button = modal.find_element(By.CSS_SELECTOR, "button[type='button'][class='close'][aria-label='Close']")
-
-        #     if close_button:
-                
-        #         print('Close button exists')
-        #         close_button.click()
-
-        #     else:
-        #         print('Close button does not exist')
-
-                
-        # except:
-        #     print("Failed to find or click the close button")
-
-        #         #wait for bottom close button to appear and click it
-        # try:
-
-        #     modal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.sub-header")))
-            
-        #     # find the close button inside the modal header
-        #     close_button = modal.find_element(By.CSS_SELECTOR, "button[type='button'][class='close'][aria-label='Close']")
-
-        #     if close_button:
-                
-        #         print('Close button exists')
-        #         close_button.click()
-
-        #     else:
-        #         print('Close button does not exist')
-
-
-            
-        # except:
-        #     print("Failed to find or click the close button")
-
         selenium_metamask_automation.favouriteAction(networkUrl, poolAddress)
         driver.quit()
-        # selenium_metamask_automation.connectToWebsite()
+        
+    except Exception as e:
+        print('reloading', e)
 
-        # selenium_metamask_automation.addToken("0xdAC17F958D2ee523a2206206994597C13D831ec7")
-    except:
-        print('reloading')
+
+
