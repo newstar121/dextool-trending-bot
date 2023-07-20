@@ -45,6 +45,21 @@ def find_element_available(element_criteria):
             flag = 1
             time.sleep(1)
 
+def find_element_available_count(element_criteria, count):
+    flag = 1
+    while(flag):
+        try:
+            if(flag > count) : break
+            element = driver.find_element(By.XPATH, element_criteria)
+            driver.execute_script('arguments[0].click()', element)
+            flag = 0
+        except Exception as e:
+            flag = flag + 1
+            time.sleep(1)
+    
+    if(flag > 0) : return count
+    else : return 0
+
 def find_element_css(element_criteria):
     flag = 1
     while(flag):
@@ -238,27 +253,32 @@ def connectToWallet():
             print("Failed to find or click the close button")
             time.sleep(1)
 
+    
     find_element_available('//button[text()="Connect"]')
     find_element_available('//button[text()=" Connect "]')
-    time.sleep(0.5)
-    modal = driver.switch_to.active_element
+    time.sleep(2)
     
-    modal.send_keys(Keys.TAB)
-    element = driver.switch_to.active_element
-    element.send_keys(Keys.TAB)
+    result = 1
+    while(result) :
+        modal = driver.switch_to.active_element
+        
+        modal.send_keys(Keys.TAB)
+        element = driver.switch_to.active_element
+        element.send_keys(Keys.TAB)
 
-    element = driver.switch_to.active_element
-    element.send_keys(Keys.TAB)
+        element = driver.switch_to.active_element
+        element.send_keys(Keys.TAB)
 
-    element = driver.switch_to.active_element
-    element.send_keys(Keys.TAB)
+        element = driver.switch_to.active_element
+        element.send_keys(Keys.TAB)
 
-    element = driver.switch_to.active_element
-    element.send_keys(Keys.ENTER)
+        element = driver.switch_to.active_element
+        element.send_keys(Keys.ENTER)
+        
+        switch_window(1)
+        
+        result =  find_element_available_count('//button[text()="Next"]', 5)
     
-    switch_window(1)
-    
-    find_element_available('//button[text()="Next"]')
     find_element_available('//button[text()="Connect"]')
 
     switch_window(0)
