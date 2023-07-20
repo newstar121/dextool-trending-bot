@@ -30,7 +30,7 @@ def launchSeleniumWebdriver():
     global driver
     # driver = webdriver.Chrome(options=chrome_options, executable_path=driver)
     driver = webdriver.Chrome(options=chrome_options, service=chrome_service)
-    time.sleep(10)
+    time.sleep(15)
     print("Extension has been loaded")
     return driver
 
@@ -53,7 +53,7 @@ def metamaskSetup(recoveryPhrase, password):
     # driver.find_element(By.XPATH, '//button[text()="Import wallet"]').click()
     # driver.find_element(By.XPATH, '//button[text()="No Thanks"]').click()
 
-    time.sleep(5)
+    time.sleep(3)
 
     secret_recovery_phrase = driver.find_element(By.XPATH, '//input')
     secret_recovery_phrase.send_keys(recoveryPhrase)
@@ -152,37 +152,46 @@ def changeMetamaskNetwork(networkName):
     # time.sleep(3)
 
 def favouriteAction(network_url, pool_address):
-    driver.get("https://www.dextools.io/app/en/" + network_url + "/pair-explorer/" + pool_address)
-    time.sleep(10)
-    star_button = driver.find_element(By.CSS_SELECTOR, "button[placement='auto'][class='ng-star-inserted']")
-    star_button.click()
+    try:
+        # driver.switch_to.window(driver.window_handles[0])
+        driver.get("https://www.dextools.io/app/en/" + network_url + "/pair-explorer/" + pool_address)
+        # driver.switch_to.window(driver.window_handles[0])
+        time.sleep(10)
+        star_button = driver.find_element(By.CSS_SELECTOR, ".favorite-button button")
+        star_button.click()
+        time.sleep(1)
+        star_button1 = driver.find_elements(By.CSS_SELECTOR, ".popover-body fa-icon.ng-fa-icon.ng-star-inserted")
+        star_button1[1].click()
+        time.sleep(1)
+        copy_button = driver.find_elements(By.CSS_SELECTOR, "a.text-muted")
+        copy_button[0].click()
+        copy_button[1].click()
+        # copy_button.send_keys(Keys.TAB)
+        # element = driver.switch_to.active_element
+        
+        time.sleep(1)
 
-    copy_button = driver.find_elements(By.CSS_SELECTOR, "a.text-muted")
-    copy_button[0].click()
-    copy_button[1].click()
-    # copy_button.send_keys(Keys.TAB)
-    # element = driver.switch_to.active_element
-    
-    time.sleep(1)
-
-    share_button = driver.find_element(By.CSS_SELECTOR, "a.shared-button")
-    share_button.click()
-    time.sleep(1)
-    
-    twitter_button = driver.find_element(By.CSS_SELECTOR, "a.btn-twitter")
-    twitter_button.click()
-    time.sleep(1)
-    telegram_button = driver.find_element(By.CSS_SELECTOR, "a.btn-telegram")
-    telegram_button.click()
-    time.sleep(1)
-    reddit_button = driver.find_element(By.CSS_SELECTOR, "a.btn-reddit")
-    reddit_button.click()
-    time.sleep(1)
-    driver.refresh()
-    time.sleep(1)
-    driver.refresh()
+        share_button = driver.find_element(By.CSS_SELECTOR, "a.shared-button")
+        share_button.click()
+        time.sleep(1)
+        
+        twitter_button = driver.find_element(By.CSS_SELECTOR, "a.btn-twitter")
+        twitter_button.click()
+        time.sleep(1)
+        telegram_button = driver.find_element(By.CSS_SELECTOR, "a.btn-telegram")
+        telegram_button.click()
+        time.sleep(1)
+        reddit_button = driver.find_element(By.CSS_SELECTOR, "a.btn-reddit")
+        reddit_button.click()
+        time.sleep(1)
+        driver.refresh()
+        time.sleep(1)
+        driver.refresh()
+    except Exception as e:
+        print(e)    
 
 def connectToWallet():
+    time.sleep(5)
     try:
 
         modal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.modal-header")))
@@ -287,7 +296,7 @@ def connectToWallet():
         driver.execute_script('arguments[0].click()', element) 
     except:
         print("Failed to find or click the connect button")
-    time.sleep(15)
+    time.sleep(2)
 
     driver.switch_to.window(driver.window_handles[1])
 
