@@ -195,6 +195,19 @@ def favouriteAction(network_url, pool_address):
 
         time.sleep(1)  
         find_element_css("a.shared-button") 
+
+        time.sleep(1) 
+        
+        flag = 1
+        while(flag):
+            try:
+                vote_button = driver.find_elements(By.CSS_SELECTOR, ".progress-hand fa-icon")
+                vote_button[0].click()
+                flag = 0
+            except:
+                flag = 1
+                time.sleep(1) 
+        
         time.sleep(1)  
         find_element_css("a.btn-twitter")   
         time.sleep(1)  
