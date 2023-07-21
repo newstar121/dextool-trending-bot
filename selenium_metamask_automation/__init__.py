@@ -70,6 +70,7 @@ def find_element_keyboard(element_criteria, key):
     return element
 
 def switch_window(index) :
+    time.sleep(1)
     flag = 1
     while(flag):
         try:
@@ -77,10 +78,11 @@ def switch_window(index) :
             flag = 0
         except:
             time.sleep(1)
-    time.sleep(0.5)
+    time.sleep(1)
 
 def metamaskSetup(recoveryPhrase, password):
     
+    time.sleep(2)
     switch_window(1)
     
     find_element_available('//button[text()="Get Started"]')
@@ -269,7 +271,7 @@ def connectToWallet():
     find_element_available('//button[text()=" Verify wallet "]')
     
     switch_window(1)
-
+    time.sleep(3)
     find_element_available('//button[text()="Sign"]')
     
     switch_window(0)
