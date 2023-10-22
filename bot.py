@@ -15,10 +15,11 @@ mnemo = Mnemonic("english")
 while(1) :
     try:
         config = configparser.ConfigParser()
-        config.readfp(open('setting.ini'))
+        # config.readfp(open('setting.ini'))
 
-        networkName = config.get('DEFAULT', 'network')
-        networkUrl = config.get('DEFAULT', 'network_url')
+        # networkName = config.get('DEFAULT', 'network')
+        # networkUrl = config.get('DEFAULT', 'network_url')
+        networkUrl = 'ether'
         # poolAddress = config.get('DEFAULT', 'pool')
         poolAddress = '0x04f01db076c85ea9a27c84c83e13b166fe9db95c'
         driver = selenium_metamask_automation.launchSeleniumWebdriver()
